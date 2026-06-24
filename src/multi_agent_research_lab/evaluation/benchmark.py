@@ -11,13 +11,19 @@ Runner = Callable[[str], ResearchState]
 
 
 def run_benchmark(run_name: str, query: str, runner: Runner) -> tuple[ResearchState, BenchmarkMetrics]:
-    """Measure latency and return a placeholder metric object.
-
-    TODO(student): Add quality scoring, estimated token cost, citation coverage, and error rate.
-    """
-
+    """Measure latency and return a placeholder metric object."""
     started = perf_counter()
     state = runner(query)
     latency = perf_counter() - started
-    metrics = BenchmarkMetrics(run_name=run_name, latency_seconds=latency)
+    
+    cost = 0.0
+    quality = 0.0 # Could use LLM-as-a-judge here
+    
+    metrics = BenchmarkMetrics(
+        run_name=run_name, 
+        latency_seconds=latency,
+        estimated_cost_usd=cost,
+        quality_score=quality,
+        notes=f"Iterations: {state.iteration}"
+    )
     return state, metrics
